@@ -10,11 +10,13 @@ feature "Viewing profiles" do
     fill_in "Email", with: "spanky@cavendish.com"
     fill_in "Password", with: "password"
     click_button "Sign in"
-
   end
 
   scenario "viewing a profile" do
     click_link "The Dude"
     page.should have_content("Here You Are")
+  end
+
+  scenario "viewing all profiles" do
   end
 end

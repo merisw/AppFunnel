@@ -1,13 +1,20 @@
 class ProfilesController < ApplicationController
-  before_filter :find_profile, only: [:show, :edit, :update, :destroy]
   before_filter :authenticate_user!
+  before_filter :find_profile, only: [:show, :edit, :update, :destroy]
 
   def index
     @profiles = Profile.all
   end
 
   def new
-    @profile = Profile.new
+
+    if Profile.where(:user_id => current_user.id).exists?
+      # binding.pry
+      redirect_to show_profile_path
+    else
+      # binding.pry
+      @profile = Profile.new
+    end
   end
 
   def create
@@ -55,6 +62,17 @@ class ProfilesController < ApplicationController
     end
 
     def find_profile
-      @profile = Profile.find(params[:id])
+      @profile = Profile.find_by_user_id(current_user)
+    rescue ActiveRecord::RecordNotFound
+      redirect_to
     end
+
+    def authorize_admin!
+      authenticate_user!
+      unless current_user.admin?
+        flash[:alert] = "You need permission to do that."
+        redirect_to root_path
+      end
+    end
+
 end

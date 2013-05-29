@@ -5,4 +5,5 @@ class Profile < ActiveRecord::Base
   validates :first_name, :last_name, :phone_number,
     :city, :state, presence: true
   belongs_to :user
+
 end
